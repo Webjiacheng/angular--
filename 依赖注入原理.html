@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>依赖注入原理剖析</title>
+</head>
+<body ng-app="myApp" ng-controller="test">
+<p></p>
+</body>
+<script src="./js/angular.js"></script>
+<script>
+    //推断式
+    angular
+        .module('myApp',[])
+        .controller('test',function ($scope) {
+
+        })
+    /**
+     * 提取参数, 获取到函数的形参
+     */
+    function extractArgs(fn) {
+        var r = /^[^\(]*\(\s*([^\)]*)\)/;
+        var args = r.exec( fn.toString() );
+        return args[1].split(',');
+    };
+    var callback=function ($scope,$log) {
+        //console.log($scope,$log);
+        console.log($log.name);
+    };
+    var res=extractArgs(callback);//["$scope", "$log"]
+
+
+    var serverList={
+        $scope:{
+            name:"$scope服务注入",
+        },
+        $log:{
+            name:"潮流前端微信订阅号",
+        }
+    };
+
+    callback(serverList[res[0]],serverList[res[1]]);
+</script>
+</html>
